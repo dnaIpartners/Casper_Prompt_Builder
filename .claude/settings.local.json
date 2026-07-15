@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest . --typescript --tailwind --app --eslint --src-dir --import-alias \"@/*\" --use-npm --no-turbopack)",
+      "Bash(rm -rf nextapp)",
+      "Bash(npx create-next-app@latest nextapp --typescript --tailwind --app --eslint --src-dir --import-alias \"@/*\" --use-npm --no-turbopack)",
+      "Bash(rm -rf /private/tmp/claude-501/-Volumes-Myo-v3-01----06--------002-Artifact-MVP-Prompt-Builder/954a22bb-900d-4ed6-86eb-e114b6de129b/scratchpad/nextapp/.git)",
+      "Bash(cp -a /private/tmp/claude-501/-Volumes-Myo-v3-01----06--------002-Artifact-MVP-Prompt-Builder/954a22bb-900d-4ed6-86eb-e114b6de129b/scratchpad/nextapp/. '/Volumes/Myo_v3/01 개인/06 개인 스터디/002 Artifact/MVP_Prompt Builder/')"
+    ]
+  }
+}
