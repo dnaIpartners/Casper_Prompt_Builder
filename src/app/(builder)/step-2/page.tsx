@@ -31,7 +31,7 @@ export default function Step2Page() {
         />
       </Field>
 
-      <Field label="시각 강조 요소" required desc="어떤 효과든 시각적으로 가장 강하게 표현할 것인가.">
+      <Field label="시각 강조 요소" required desc="어떤 효과를 시각적으로 가장 강하게 표현할 것인가.">
         <TextArea
           value={state.highlight}
           onChange={(v) => set("highlight", v)}

@@ -50,7 +50,7 @@ export default function Step3Page() {
         </p>
       </Field>
 
-      <Field label="렌더링 방식" required>
+      <Field label="렌더링 방식" required desc="기법/재질 표현 방식">
         <div className="flex flex-wrap gap-2.5">
           {RENDERING_OPTIONS.map((opt) => (
             <Card
@@ -83,12 +83,15 @@ export default function Step3Page() {
             {renderingAccordionOpen && (
               <div className="bg-white p-4 text-left">
                 <div>
-                  <div className="mb-2 flex items-center gap-1.5 text-xs font-bold text-[#6b7280]">
+                  <div className="mb-1 flex items-center gap-1.5 text-xs font-bold text-[#6b7280]">
                     사실감 정도{" "}
                     <span className="rounded-full bg-[#f4f5f7] px-1.5 py-0.5 text-[10.5px] font-bold text-[#9ca3af] uppercase">
                       선택 (기본값: Balanced/중간)
                     </span>
                   </div>
+                  <p className="mb-2 text-xs leading-relaxed text-[#9ca3af]">
+                    선택한 렌더링 방식을 기준으로 형태를 단순화할지 사실적으로 표현할지의 강도입니다.
+                  </p>
                   <div className="flex flex-wrap gap-1.5">
                     {REALISM_OPTIONS.map((opt) => (
                       <ToggleButton
@@ -101,7 +104,7 @@ export default function Step3Page() {
                     ))}
                   </div>
                 </div>
-                <div className="mt-3.5">
+                <div className="mt-6">
                   <div className="mb-2 flex items-center gap-1.5 text-xs font-bold text-[#6b7280]">
                     디테일 강도{" "}
                     <span className="rounded-full bg-[#f4f5f7] px-1.5 py-0.5 text-[10.5px] font-bold text-[#9ca3af] uppercase">
