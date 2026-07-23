@@ -140,7 +140,10 @@ export async function POST(request: Request) {
   try {
     response = await client.messages.create({
       model: MODEL,
-      max_tokens: 1500,
+      // Sonnet 5는 thinking 미지정 시 적응형 사고가 기본 ON이고 그 토큰도 max_tokens에 포함됨.
+      // 이 작업은 정형 구조 생성이라 사고를 끄고(속도·비용 절감), JSON 출력에 충분한 예산만 확보.
+      thinking: { type: "disabled" },
+      max_tokens: 8000,
       output_config: {
         effort: "medium",
         format: { type: "json_schema", schema: RESPONSE_SCHEMA },
