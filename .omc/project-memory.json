@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1784176643563,
+  "lastScanned": 1787547209565,
   "projectRoot": "/Users/pourlui/Documents/01. NX Lab/디자인스터디/Casper_Prompt_Builder",
   "techStack": {
     "languages": [
@@ -42,7 +42,7 @@
     "runtime": null
   },
   "build": {
-    "buildCommand": "npm run build",
+    "buildCommand": "cd \"/Users/pourlui/Documents/01. NX Lab/디자인스터디/Casper_Prompt_Builder\" && npx tsc --noEmit 2>&1 | tail -5; echo \"tsc exit: $?\"; npm run lint 2>&1 | tail -5; cat .gitignore",
     "testCommand": null,
     "lintCommand": "npm run lint",
     "devCommand": "npm run dev",
@@ -63,6 +63,7 @@
     "isMonorepo": false,
     "workspaces": [],
     "mainDirectories": [
+      "docs",
       "public",
       "src"
     ],
@@ -70,11 +71,20 @@
   },
   "customNotes": [],
   "directoryMap": {
+    "docs": {
+      "path": "docs",
+      "purpose": "Documentation",
+      "fileCount": 1,
+      "lastAccessed": 1787547209504,
+      "keyFiles": [
+        "PRD.md"
+      ]
+    },
     "public": {
       "path": "public",
       "purpose": "Public files",
       "fileCount": 5,
-      "lastAccessed": 1784176643516,
+      "lastAccessed": 1787547209504,
       "keyFiles": [
         "file.svg",
         "globe.svg",
@@ -86,15 +96,15 @@
     "src": {
       "path": "src",
       "purpose": "Source code",
-      "fileCount": 0,
-      "lastAccessed": 1784176643522,
+      "fileCount": 1,
+      "lastAccessed": 1787547209517,
       "keyFiles": []
     },
     "src/app": {
       "path": "src/app",
       "purpose": "Application code",
       "fileCount": 4,
-      "lastAccessed": 1784176643523,
+      "lastAccessed": 1787547209518,
       "keyFiles": [
         "favicon.ico",
         "globals.css",
@@ -102,6 +112,25 @@
       ]
     }
   },
-  "hotPaths": [],
+  "hotPaths": [
+    {
+      "path": "next.config.ts",
+      "accessCount": 2,
+      "lastAccessed": 1787556433396,
+      "type": "file"
+    },
+    {
+      "path": "src/app/api/generate-prompt/route.ts",
+      "accessCount": 1,
+      "lastAccessed": 1787555825156,
+      "type": "file"
+    },
+    {
+      "path": "src/app/page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1787555830670,
+      "type": "file"
+    }
+  ],
   "userDirectives": []
 }

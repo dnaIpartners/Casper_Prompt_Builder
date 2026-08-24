@@ -167,7 +167,6 @@ export function BuilderProvider({ children }: { children: React.ReactNode }) {
     setApiError(null);
     setExampleOpen(false);
     setRenderingAccordionOpen(true);
-    setHistory([]);
     router.push(STEP_PATHS[1]);
   }
 

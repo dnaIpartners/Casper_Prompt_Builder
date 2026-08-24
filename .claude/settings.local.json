@@ -43,7 +43,10 @@
       "Bash(git rm *)",
       "Bash(git add *)",
       "Bash(git commit -q -m ' *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(npx tsc *)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(git commit *)"
     ],
     "additionalDirectories": [
       "/private/tmp/claude-501/-Volumes-Myo-v3-01----06--------002-Artifact-MVP-Prompt-Builder/26c875d7-08d4-4e64-8636-2bb8dc1ae7bb/scratchpad"
