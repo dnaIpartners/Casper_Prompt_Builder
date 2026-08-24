@@ -4,6 +4,7 @@ import { createContext, useContext, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   BuilderState,
+  HistoryEntry,
   Material,
   Mode,
   PromptResult,
@@ -42,6 +43,8 @@ interface BuilderContextValue {
   handleSample: () => void;
   generateViaApi: () => Promise<void>;
   resetAll: () => void;
+  history: HistoryEntry[];
+  applyHistoryEntry: (entry: HistoryEntry) => void;
 }
 
 const BuilderContext = createContext<BuilderContextValue | null>(null);
@@ -57,6 +60,7 @@ export function BuilderProvider({ children }: { children: React.ReactNode }) {
   const [apiLoading, setApiLoading] = useState(false);
   const [exampleOpen, setExampleOpen] = useState(false);
   const [renderingAccordionOpen, setRenderingAccordionOpen] = useState(true);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
 
   const currentStep: Step = useMemo(() => {
     const match = /step-(\d)/.exec(pathname ?? "");
@@ -134,12 +138,24 @@ export function BuilderProvider({ children }: { children: React.ReactNode }) {
         setResultStale(false);
         setLastMode("api");
         setApiError(null);
+        setHistory((prev) => [
+          { id: `h${Date.now()}_${prev.length}`, seq: prev.length + 1, createdAt: Date.now(), state, result: data },
+          ...prev,
+        ]);
       }
     } catch (err) {
       setApiError(err instanceof Error ? err.message : "서버와 통신할 수 없습니다.");
     } finally {
       setApiLoading(false);
     }
+  }
+
+  function applyHistoryEntry(entry: HistoryEntry) {
+    setState(entry.state);
+    setResultData(entry.result);
+    setResultStale(false);
+    setLastMode("api");
+    setApiError(null);
   }
 
   function resetAll() {
@@ -151,6 +167,7 @@ export function BuilderProvider({ children }: { children: React.ReactNode }) {
     setApiError(null);
     setExampleOpen(false);
     setRenderingAccordionOpen(true);
+    setHistory([]);
     router.push(STEP_PATHS[1]);
   }
 
@@ -177,6 +194,8 @@ export function BuilderProvider({ children }: { children: React.ReactNode }) {
     handleSample,
     generateViaApi,
     resetAll,
+    history,
+    applyHistoryEntry,
   };
 
   return <BuilderContext.Provider value={value}>{children}</BuilderContext.Provider>;

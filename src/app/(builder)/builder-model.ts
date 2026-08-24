@@ -41,6 +41,14 @@ export interface PromptResult {
   avoid_ko: string;
 }
 
+export interface HistoryEntry {
+  id: string;
+  seq: number;
+  createdAt: number;
+  state: BuilderState;
+  result: PromptResult;
+}
+
 export const STEP_TITLES: Record<Step, string> = {
   1: "컨셉 정의",
   2: "오브젝트 정의",
@@ -227,4 +235,33 @@ export function generateSampleResult(state: BuilderState): PromptResult {
 
 export function copyText(text: string) {
   return navigator.clipboard.writeText(text || "");
+}
+
+export function describeState(state: BuilderState): { label: string; value: string }[] {
+  const compositionLabel = COMPOSITION_OPTIONS.find((o) => o.value === state.composition)?.title ?? "-";
+  const angleLabel = ANGLE_OPTIONS.find((o) => o.value === state.angle)?.label ?? "-";
+  const bgTypeLabel = BGTYPE_OPTIONS.find((o) => o.value === state.bgType)?.label ?? "-";
+  const renderingLabel = state.rendering ? RENDERING_LABELS[state.rendering] : "-";
+  const realismLabel = REALISM_OPTIONS.find((o) => o.value === state.realism)?.label ?? "-";
+  const detailLabel = DETAIL_OPTIONS.find((o) => o.value === state.detail)?.label ?? "-";
+  const materialLabel = state.material.length
+    ? state.material.map((m) => MATERIAL_LABELS[m]).join(", ")
+    : "지정 안 함";
+
+  return [
+    { label: "기획전 주제", value: state.theme || "-" },
+    { label: "핵심 메시지", value: state.message || "-" },
+    { label: "분위기 및 감성 설명", value: state.mood || "-" },
+    { label: "메인 오브젝트", value: state.object || "-" },
+    { label: "연상 요소", value: state.assoc || "-" },
+    { label: "시각 강조 요소", value: state.highlight || "-" },
+    { label: "구성 방식", value: compositionLabel },
+    { label: "오브젝트 앵글", value: angleLabel },
+    { label: "배경 유형", value: bgTypeLabel },
+    { label: "배경 표현 설명", value: state.background || "-" },
+    { label: "렌더링 방식", value: renderingLabel },
+    { label: "사실감 정도", value: realismLabel },
+    { label: "디테일 강도", value: detailLabel },
+    { label: "재질 스타일", value: materialLabel },
+  ];
 }

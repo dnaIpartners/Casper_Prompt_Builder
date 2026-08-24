@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { useBuilder } from "../builder-context";
 import { copyText } from "../builder-model";
-import { BTN, BTN_PRIMARY, ResultBlock } from "../ui";
+import { HistoryModal } from "../history-modal";
+import { BTN, BTN_PRIMARY, ClockIcon, ResultBlock } from "../ui";
 
 export default function Step4Page() {
   const {
@@ -15,6 +17,9 @@ export default function Step4Page() {
     generateViaApi,
     goToStep,
   } = useBuilder();
+  const [historyOpen, setHistoryOpen] = useState(false);
+
+  const hasRealResult = !!resultData && lastMode === "api";
 
   return (
     <div>
@@ -50,19 +55,37 @@ export default function Step4Page() {
         </div>
       )}
 
-      <div className="mb-6 flex gap-2.5">
-        <button type="button" onClick={handleSample} disabled={apiLoading} className={BTN}>
-          샘플 출력 보기
-        </button>
+      <div className="mb-6 flex items-center justify-between gap-2.5">
+        <div className="flex gap-2.5">
+          <button
+            type="button"
+            onClick={handleSample}
+            disabled={apiLoading || hasRealResult}
+            title={hasRealResult ? "실제 결과가 생성된 상태에서는 샘플 출력으로 덮어쓸 수 없습니다" : undefined}
+            className={BTN}
+          >
+            샘플 출력 보기
+          </button>
+          <button
+            type="button"
+            onClick={generateViaApi}
+            disabled={missingFields.length > 0 || apiLoading}
+            className={BTN_PRIMARY}
+          >
+            {hasRealResult ? "결과 다시 생성" : "결과 생성하기"}
+          </button>
+        </div>
         <button
           type="button"
-          onClick={generateViaApi}
-          disabled={missingFields.length > 0 || apiLoading}
-          className={BTN_PRIMARY}
+          onClick={() => setHistoryOpen(true)}
+          className={BTN + " flex items-center gap-1.5"}
         >
-          {resultData && lastMode === "api" ? "결과 다시 생성" : "결과 생성하기"}
+          <ClockIcon className="h-4 w-4" />
+          히스토리
         </button>
       </div>
+
+      <HistoryModal open={historyOpen} onClose={() => setHistoryOpen(false)} />
 
       {apiLoading && <div className="rounded-lg border border-[#e5e7eb] bg-white p-5">생성 중입니다...</div>}
 
@@ -78,21 +101,18 @@ export default function Step4Page() {
           <ResultBlock index="02" title="표현 방향" content={resultData.direction} />
           <ResultBlock
             index="03"
-            title="Firefly Prompt (English)"
-            content={resultData.prompt}
-            avoid={resultData.avoid}
-            copyLabels={["Prompt 복사 (English)", "Avoid 복사 (English)"]}
-            onCopyPrompt={() => copyText(resultData.prompt)}
-            onCopyAvoid={() => copyText(resultData.avoid)}
+            title="Prompt 확인 (국문 해석)"
+            content={resultData.prompt_ko}
+            avoid={resultData.avoid_ko}
           />
           <ResultBlock
             index="04"
-            title="Firefly Prompt (국문)"
-            content={resultData.prompt_ko}
-            avoid={resultData.avoid_ko}
-            copyLabels={["Prompt 복사 (국문)", "Avoid 복사 (국문)"]}
-            onCopyPrompt={() => copyText(resultData.prompt_ko)}
-            onCopyAvoid={() => copyText(resultData.avoid_ko)}
+            title="Firefly Prompt (English)"
+            content={resultData.prompt}
+            avoid={resultData.avoid}
+            copyLabels={["Prompt 복사", "Avoid 복사"]}
+            onCopyPrompt={() => copyText(resultData.prompt)}
+            onCopyAvoid={() => copyText(resultData.avoid)}
           />
         </div>
       )}
