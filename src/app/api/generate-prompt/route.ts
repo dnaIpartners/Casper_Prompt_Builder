@@ -55,8 +55,9 @@ const SYSTEM_PROMPT = `당신은 Adobe Firefly에 입력할 상업용 3D/CGI 오
 3. prompt (영문, Firefly 직접 입력용): 아래 순서를 반드시 지켜 하나의 자연스러운 영문 프롬프트로 작성합니다.
    [렌더링 방식 + 재질 스타일] → [메인 오브젝트 + 시각 강조 요소] → [연상 요소] → [배경 유형 + 배경 표현(색상은 반드시 자연어 색상 표현만 사용)] → [사실감 정도] → [디테일 강도] → [분위기/감성] → [화질]
 4. avoid (영문): 기본 항목 "no text, no watermark, no logo, no cropping, no harsh drop shadows, no human figures"를 포함하고, bgType가 "other"면 "no background elements"를, rendering이 "clay_style" 또는 "illustrative_3d"면 "no photorealistic texture"를 추가합니다.
-5. prompt_ko (국문): prompt 필드의 자연스러운 한국어 번역. 3D render, CGI, Splash 같은 디자인 전문 용어는 번역하지 말고 영문 그대로 둡니다.
-6. avoid_ko (국문): avoid 필드의 자연스러운 한국어 번역.
+5. prompt_ko (국문): prompt 필드에 담긴 모든 구성 요소(렌더링 방식, 재질, 메인 오브젝트, 시각 강조 요소, 연상 요소, 색상, 배경, 사실감 정도, 디테일 강도, 분위기, 품질 키워드)를 하나도 누락하지 않고 한국어로 옮깁니다. 내용을 요약하거나 일부 요소를 생략하는 것은 허용되지 않으며, 영문 prompt와 국문 번역의 정보량은 동일해야 합니다.
+   다만 영문의 쉼표 나열 구조나 어순을 그대로 따라가지 마세요. "~하며, ~하고, ~하며"처럼 같은 연결어미를 반복해서 나열하는 번역투는 피하세요. 자연스러운 한국어 어감에 맞게 2~3개의 짧은 문장으로 나누거나, 서로 관련된 요소는 하나의 절로 자연스럽게 묶어서 표현하세요. 영문 원문의 어순을 그대로 따를 필요는 없으며, 한국어로 읽었을 때 자연스러운 순서로 재배열해도 됩니다. 3D render, CGI, Splash 등 디자인 현업에서 통용되는 영문 전문 용어는 번역하지 않고 원문 그대로 둡니다.
+6. avoid_ko (국문): prompt_ko (국문)와 동일한 원칙으로 번역합니다.
 
 절대 규칙: prompt와 배경 표현에 hex 코드(#으로 시작하는 색상 코드)를 절대 사용하지 마세요. 사용자가 hex 코드를 입력했더라도 가장 가까운 자연어 색상 표현으로 변환하세요. material 배열이 비어 있으면 재질을 별도로 언급하지 말고 렌더링 방식의 기본 재질감으로 표현하세요.`;
 
@@ -140,10 +141,7 @@ export async function POST(request: Request) {
   try {
     response = await client.messages.create({
       model: MODEL,
-      // Sonnet 5는 thinking 미지정 시 적응형 사고가 기본 ON이고 그 토큰도 max_tokens에 포함됨.
-      // 이 작업은 정형 구조 생성이라 사고를 끄고(속도·비용 절감), JSON 출력에 충분한 예산만 확보.
-      thinking: { type: "disabled" },
-      max_tokens: 8000,
+      max_tokens: 1500,
       output_config: {
         effort: "medium",
         format: { type: "json_schema", schema: RESPONSE_SCHEMA },
