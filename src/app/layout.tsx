@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Firefly Prompt Builder",
-  description: "기획성 오브젝트 생성을 위한 4단계 Firefly 프롬프트 표준화 도구",
+  title: "Prompt Builder",
+  description: "기획성 오브젝트 생성을 위한 4단계 프롬프트 표준화 도구",
 };
 
 export default function RootLayout({
