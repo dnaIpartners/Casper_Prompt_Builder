@@ -120,6 +120,12 @@
       "type": "file"
     },
     {
+      "path": "src/app/layout.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1787560587556,
+      "type": "file"
+    },
+    {
       "path": "src/app/api/generate-prompt/route.ts",
       "accessCount": 1,
       "lastAccessed": 1787555825156,

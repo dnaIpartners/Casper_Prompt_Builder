@@ -21,10 +21,10 @@ function BuilderShell({ children }: { children: React.ReactNode }) {
         {/* Brand */}
         <div className="mb-7">
           <span className="mb-2 block text-[11px] font-bold tracking-wider text-[#4090f1] uppercase">
-            Adobe Firefly · Internal Tool
+            Internal Tool
           </span>
           <h1 className="mb-1.5 text-[1.75rem] leading-tight font-extrabold tracking-tight">
-            Firefly Prompt Builder
+            Prompt Builder
           </h1>
           <p className="m-0 text-sm leading-relaxed text-[#6b7280]">
             기획성 오브젝트 생성을 위한 4단계 프롬프트 표준화 도구
