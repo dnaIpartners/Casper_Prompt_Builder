@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Prompt Builder",
-  description: "기획성 오브젝트 생성을 위한 4단계 프롬프트 표준화 도구",
+  title: "기획성 콘텐츠 제작 도구",
+  description: "프롬프트 빌더와 카피 생성기를 제공하는 내부 콘텐츠 제작 도구",
 };
 
 export default function RootLayout({

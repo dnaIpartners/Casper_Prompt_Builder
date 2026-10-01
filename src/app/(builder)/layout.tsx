@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { BuilderProvider, useBuilder } from "./builder-context";
 import { ArrowLeftIcon, ArrowRightIcon, BTN, BTN_DANGER, BTN_PRIMARY, CheckIcon, RestartIcon } from "./ui";
 import { STEP_TITLES, Step } from "./builder-model";
@@ -20,6 +21,13 @@ function BuilderShell({ children }: { children: React.ReactNode }) {
       <div className="mx-auto max-w-3xl px-6 pt-10 pb-32">
         {/* Brand */}
         <div className="mb-7">
+          <Link
+            href="/"
+            className="mb-6 inline-flex items-center gap-1 text-[13px] font-semibold text-[#6b7280] hover:text-[#4090f1]"
+          >
+            <ArrowLeftIcon className="h-3.5 w-3.5" />
+            도구 선택으로 돌아가기
+          </Link>
           <span className="mb-2 block text-[11px] font-bold tracking-wider text-[#4090f1] uppercase">
             Internal Tool
           </span>
