@@ -210,7 +210,7 @@ async function callModel(
   }
   if (response.stop_reason === "max_tokens") {
     console.warn("[generate-copy] max_tokens 도달, 사용량:", JSON.stringify(response.usage), "한도:", maxTokens);
-    throw new ApiError("응답이 최대 길이를 초과해 잘렸습니다. 입력을 조금 더 간결하게 작성해보세요.", 502);
+    throw new ApiError("생성 결과가 너무 길어 잘렸습니다. 다시 시도해주세요.", 502);
   }
 
   const textBlock = response.content.find(
