@@ -1,6 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
+import promptBuilderIcon from "@/assets/icons/prompt-builder.png";
 import { BuilderProvider, useBuilder } from "./builder-context";
 import { ArrowLeftIcon, ArrowRightIcon, BTN, BTN_DANGER, BTN_PRIMARY, CheckIcon, RestartIcon } from "./ui";
 import { STEP_TITLES, Step } from "./builder-model";
@@ -31,8 +33,9 @@ function BuilderShell({ children }: { children: React.ReactNode }) {
           <span className="mb-2 block text-[11px] font-bold tracking-wider text-[#4090f1] uppercase">
             Internal Tool
           </span>
-          <h1 className="mb-1.5 text-[1.75rem] leading-tight font-extrabold tracking-tight">
-            Prompt Builder
+          <h1 className="mb-1.5 flex items-center gap-2.5 text-[1.75rem] leading-tight font-extrabold tracking-tight">
+            <Image src={promptBuilderIcon} alt="" width={32} height={32} className="h-8 w-8 flex-shrink-0 translate-y-px" priority />
+            <span>Prompt Builder</span>
           </h1>
           <p className="m-0 text-sm leading-relaxed text-[#6b7280]">
             기획성 오브젝트 생성을 위한 4단계 프롬프트 표준화 도구

@@ -1,3 +1,4 @@
+import { isAuthenticated } from "@/lib/auth";
 import Anthropic from "@anthropic-ai/sdk";
 import {
   ANGLE_OPTIONS,
@@ -66,6 +67,10 @@ function errorResponse(message: string, status: number) {
 }
 
 export async function POST(request: Request) {
+  if (!(await isAuthenticated())) {
+    return errorResponse("로그인이 필요합니다.", 401);
+  }
+
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     return errorResponse("서버에 ANTHROPIC_API_KEY가 설정되어 있지 않습니다.", 500);
@@ -141,7 +146,7 @@ export async function POST(request: Request) {
   try {
     response = await client.messages.create({
       model: MODEL,
-      max_tokens: 8000,
+      max_tokens: 1500,
       output_config: {
         effort: "medium",
         format: { type: "json_schema", schema: RESPONSE_SCHEMA },
@@ -161,9 +166,8 @@ export async function POST(request: Request) {
     );
   }
   if (response.stop_reason === "max_tokens") {
-    console.warn("[generate-prompt] max_tokens 도달, 사용량:", JSON.stringify(response.usage));
     return errorResponse(
-      "생성 결과가 너무 길어 잘렸습니다. 다시 시도해주세요.",
+      "응답이 최대 길이를 초과해 잘렸습니다. 입력을 조금 더 간결하게 작성해보세요.",
       502
     );
   }

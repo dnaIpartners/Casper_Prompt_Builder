@@ -19,6 +19,7 @@ import {
   isFilled,
   isMaterialDisabled,
 } from "./builder-model";
+import { appendHistoryEntry, useHistoryStore } from "./builder-history";
 
 interface BuilderContextValue {
   state: BuilderState;
@@ -60,7 +61,7 @@ export function BuilderProvider({ children }: { children: React.ReactNode }) {
   const [apiLoading, setApiLoading] = useState(false);
   const [exampleOpen, setExampleOpen] = useState(false);
   const [renderingAccordionOpen, setRenderingAccordionOpen] = useState(true);
-  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const history = useHistoryStore();
 
   const currentStep: Step = useMemo(() => {
     const match = /step-(\d)/.exec(pathname ?? "");
@@ -138,10 +139,7 @@ export function BuilderProvider({ children }: { children: React.ReactNode }) {
         setResultStale(false);
         setLastMode("api");
         setApiError(null);
-        setHistory((prev) => [
-          { id: `h${Date.now()}_${prev.length}`, seq: prev.length + 1, createdAt: Date.now(), state, result: data },
-          ...prev,
-        ]);
+        appendHistoryEntry({ state, result: data });
       }
     } catch (err) {
       setApiError(err instanceof Error ? err.message : "서버와 통신할 수 없습니다.");

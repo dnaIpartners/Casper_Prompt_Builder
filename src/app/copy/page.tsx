@@ -1,6 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
+import copyComposerIcon from "@/assets/icons/copy-composer.png";
 import { useState } from "react";
 import { ArrowLeftIcon, BTN, BTN_PRIMARY, ClockIcon, Field, RestartIcon, TextArea } from "../(builder)/ui";
 import { runAdvisoryChecks } from "./copy-checks";
@@ -138,7 +140,10 @@ export default function CopyPage() {
           <span className="mb-2 block text-[11px] font-bold tracking-wider text-[#4090f1] uppercase">
             Internal Tool
           </span>
-          <h1 className="mb-1.5 text-[1.75rem] leading-tight font-extrabold tracking-tight">Copy Composer</h1>
+          <h1 className="mb-1.5 flex items-center gap-2.5 text-[1.75rem] leading-tight font-extrabold tracking-tight">
+            <Image src={copyComposerIcon} alt="" width={32} height={32} className="h-8 w-8 flex-shrink-0 -translate-y-px" priority />
+            <span>Copy Composer</span>
+          </h1>
           <p className="m-0 text-sm leading-relaxed text-[#6b7280]">
             게재월과 이미지 생성 프롬프트를 입력하면 카피 프로덕션 가이드라인 · 기획전 톤 컴퍼스 규칙에 따라<br></br>
             헤드라인·서브카피 3안을 생성합니다.

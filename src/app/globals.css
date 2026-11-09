@@ -22,3 +22,23 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* 로그인 성공 후 카드 내용이 도구 선택으로 바뀔 때의 전환 */
+@theme {
+  --animate-card-in: card-in 0.35s ease-out both;
+  @keyframes card-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-card-in {
+    animation: none;
+  }
+}

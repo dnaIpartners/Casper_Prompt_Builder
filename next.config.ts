@@ -1,9 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // 홈 디렉터리의 잡동사니 lockfile 때문에 워크스페이스 루트가 /Users/pourlui로
-  // 잘못 추론되면 모듈 식별자에 한글 경로가 포함되어 Turbopack이 패닉한다.
-  turbopack: { root: __dirname },
+  // 로그인 페이지가 "/"로 통합되어, 예전 /login 주소는 진입점으로 보낸다.
+  async redirects() {
+    return [{ source: "/login", destination: "/", permanent: false }];
+  },
 };
 
 export default nextConfig;

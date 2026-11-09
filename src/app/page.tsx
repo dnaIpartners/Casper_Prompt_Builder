@@ -1,54 +1,100 @@
-import Link from "next/link";
-import { ArrowRightIcon } from "./(builder)/ui";
+import { DM_Sans } from "next/font/google";
+import Image from "next/image";
+import { getDisplayName, isAuthenticated } from "@/lib/auth";
+import { logout } from "./_auth/actions";
+import { LoginForm } from "./_auth/login-form";
+import { ToolHub } from "./_auth/tool-hub";
+import appIcon from "./icon.png";
 
-const TOOLS = [
-  {
-    href: "/step-1",
-    tag: "Image Prompt",
-    title: "Prompt Builder",
-    desc: "기획성 오브젝트 이미지 생성을 위한\n4단계 프롬프트 표준화 도구",
-  },
-  {
-    href: "/copy",
-    tag: "Copy",
-    title: "Copy Composer",
-    desc: "게재월·프롬프트 기반으로\n기획전 헤드라인·서브카피 3안을 생성하는 도구",
-  },
-];
+const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
-export default function RootPage() {
+// 사이트 진입점이자 유일한 허브.
+// 로그인 전에는 로그인 폼을, 로그인 후에는 같은 카드 안에서 도구 선택 목록을 보여준다.
+export default async function RootPage({ searchParams }: PageProps<"/">) {
+  const authed = await isAuthenticated();
+  const { next } = await searchParams;
+
   return (
-    <div className="min-h-screen bg-[#f4f5f7] text-[#111827]">
-      <div className="mx-auto max-w-3xl px-6 pt-16 pb-16">
-        <div className="mb-10">
-          <span className="mb-2 block text-[11px] font-bold tracking-wider text-[#4090f1] uppercase">
-            Internal Tool
+    <div
+      className={`${dmSans.className} relative flex min-h-screen items-center justify-center overflow-hidden bg-[#e9ebf3] px-4 py-16 text-[#1f2330]`}
+    >
+      {/* 그라디언트 메시 배경 */}
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-[20%] -left-[15%] h-[75vmax] w-[75vmax] rounded-full bg-[radial-gradient(circle,#6f9dff_0%,transparent_62%)] blur-3xl" />
+        <div className="absolute -bottom-[30%] -left-[10%] h-[80vmax] w-[80vmax] rounded-full bg-[radial-gradient(circle,#3d55f5_0%,transparent_60%)] blur-3xl" />
+        <div className="absolute -right-[20%] -bottom-[25%] h-[70vmax] w-[70vmax] rounded-full bg-[radial-gradient(circle,#6a48ee_0%,transparent_62%)] blur-3xl" />
+        <div className="absolute top-[-10%] right-[-10%] h-[50vmax] w-[50vmax] rounded-full bg-[radial-gradient(circle,#f6f6f8_0%,transparent_65%)] blur-2xl" />
+      </div>
+
+      {/* 카드 뒤에 깔리는 반투명 대형 타이포 */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[clamp(8rem,26vw,24rem)] leading-none font-bold tracking-[0.02em] whitespace-nowrap text-white/45 [text-shadow:0_12px_40px_rgba(80,90,220,.18)] select-none"
+      >
+        Studio
+      </div>
+
+      {/* 코너 메타 정보 */}
+      <div className="absolute top-8 left-6 text-[15px] leading-tight font-semibold text-white [text-shadow:0_1px_12px_rgba(40,60,180,.35)] sm:top-12 sm:left-12">
+        Internal Tool
+        <span className="block font-normal text-white/75">Content Studio</span>
+      </div>
+      <div className="absolute bottom-8 left-6 hidden gap-16 text-[13px] leading-tight font-semibold tracking-wide text-white/90 uppercase sm:bottom-12 sm:left-12 sm:flex">
+        <span>
+          Prompt Builder
+          <span className="block text-white/65">Copy Composer</span>
+        </span>
+      </div>
+
+      {/* 로그인 / 도구 선택 카드 */}
+      <div className="relative w-full max-w-[460px] overflow-hidden rounded-[12px] border border-white/70 bg-[#fafafb]/72 shadow-[0_30px_80px_-20px_rgba(40,40,120,.45)] backdrop-blur-[3px]">
+        <div className="flex items-center justify-between border-b border-[#e5e7eb] px-6 py-4.5">
+          <span className="text-[14px] font-medium text-[#7a8090]">{authed ? "Select a tool" : "Log in"}</span>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#eef2fe] px-2.5 py-1 text-[11px] font-semibold tracking-wide text-[#2f7bf5] uppercase">
+            <LockIcon className="h-3 w-3" />
+            Private
           </span>
-          <h1 className="mb-1.5 text-[1.75rem] leading-tight font-extrabold tracking-tight">
-            기획성 콘텐츠 제작 도구
-          </h1>
-          <p className="m-0 text-sm leading-relaxed text-[#6b7280]">사용할 도구를 선택하세요.</p>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {TOOLS.map((tool) => (
-            <Link
-              key={tool.href}
-              href={tool.href}
-              className="group flex min-h-[320px] flex-col justify-between rounded-xl border border-[#e5e7eb] bg-white p-6 shadow-[0_1px_2px_rgba(17,24,39,.05)] transition-all hover:border-[#4090f1] hover:shadow-[0_4px_12px_rgba(64,144,241,.12)]"
-            >
-              <div>
-                <span className="mb-3 inline-block rounded-full bg-[#eceef1] px-2.5 py-1 text-[10.5px] font-bold tracking-wide text-[#6b7280] uppercase transition-colors group-hover:bg-[#e4effc] group-hover:text-[#4090f1]">
-                  {tool.tag}
-                </span>
-                <h2 className="m-0 mb-2 text-2xl font-bold tracking-tight">{tool.title}</h2>
-                <p className="m-0 text-[13px] leading-relaxed whitespace-pre-line text-[#6b7280]">{tool.desc}</p>
-              </div>
-              <ArrowRightIcon className="h-5 w-5 self-end text-[#9ca3af] transition-colors group-hover:text-[#4090f1]" />
-            </Link>
-          ))}
-        </div>
+        {authed ? (
+          <div key="hub" className="animate-card-in px-7 pt-11 pb-12 sm:px-12">
+            <h1 className="mb-2 flex items-center gap-2.5 text-[1.9rem] leading-[1.15] font-bold tracking-[-0.03em] text-[#2a2e3a]">
+              <Image src={appIcon} alt="" width={36} height={36} className="h-9 w-9 flex-shrink-0 -translate-y-0.5" priority />
+              <span>{getDisplayName()}님, 안녕하세요</span>
+            </h1>
+            <p className="mb-9 text-[14px] text-[#7a8090]">사용할 도구를 선택하세요.</p>
+            <ToolHub />
+            {/* 로그인 폼의 로그인 버튼 자리에 로그아웃 버튼 */}
+            <form action={logout}>
+              <button
+                type="submit"
+                className="mt-9 h-12 w-full cursor-pointer rounded-lg bg-[#9ea2ae] text-[15px] font-semibold text-[#ffffff] transition-colors hover:bg-[#6b7180]"
+              >
+                로그아웃
+              </button>
+            </form>
+          </div>
+        ) : (
+          <div key="login" className="px-7 pt-11 pb-12 sm:px-12">
+            <h1 className="mb-2 text-[1.9rem] leading-[1.15] font-bold tracking-[-0.03em] text-[#2a2e3a]">
+              기획성
+              <br />
+              콘텐츠 제작 도구
+            </h1>
+            <p className="mb-9 text-[14px] text-[#7a8090]">계정 소유자만 접속할 수 있습니다.</p>
+            <LoginForm next={typeof next === "string" ? next : "/"} />
+          </div>
+        )}
       </div>
     </div>
+  );
+}
+
+function LockIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} className={className}>
+      <rect x="4" y="11" width="16" height="10" rx="2" />
+      <path d="M8 11V7a4 4 0 0 1 8 0v4" strokeLinecap="round" />
+    </svg>
   );
 }
