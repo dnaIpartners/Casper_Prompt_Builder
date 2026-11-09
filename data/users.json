@@ -1,0 +1,37 @@
+[
+  {
+    "id": "pourlui",
+    "email": "pourlui@ipartners.co.kr",
+    "name": "pourlui",
+    "role": "admin",
+    "passwordHash": "scrypt$JnAqC1Zed0TToo_uvJZ7yg$MOhh4-8_ZAhF_T92v-4dWZy5nKKu4Ng5aFocBTe_aezRKV6jUdCE3MPX-2kzg21TDpi38H3Z-BGWYRoCGS352g"
+  },
+  {
+    "id": "mongdanbi",
+    "email": "mongdanbi@ipartners.co.kr",
+    "name": "mongdanbi",
+    "role": "user",
+    "passwordHash": "scrypt$Xwa9ye458fJAGgrVJwQJVA$gvGLGxkkudQG1wjmu6_d00JcXkKWcTaOgxkJ2QfD77XYYLu81X1ty9B0H-U5ob-EujqhfvmHerxt2ii1xEXobw"
+  },
+  {
+    "id": "arong",
+    "email": "arong@ipartners.co.kr",
+    "name": "arong",
+    "role": "user",
+    "passwordHash": "scrypt$Rjd0cuwV7uaqxccER0GBGg$n-dAovQyKzeFHSncUtO-F5JNLQW262zI3gE2C0nD2cd4b7xson-jme3UttpnFNYwplQoBgh2SgIb6R6mB8GxEQ"
+  },
+  {
+    "id": "rlawltn1623",
+    "email": "rlawltn1623@ipartners.co.kr",
+    "name": "rlawltn1623",
+    "role": "user",
+    "passwordHash": "scrypt$cMt_CADDi-ceruZSvAIqWw$WKBdT25Nf9bNTBUdJTSDtZzUD0W4kNiNH4UY97hFv9jS0f4_0uPX4pxGp09IvrI00-XY_9XI3JRTlUGh40C1Iw"
+  },
+  {
+    "id": "bgyun",
+    "email": "bgyun@ipartners.co.kr",
+    "name": "bgyun",
+    "role": "user",
+    "passwordHash": "scrypt$NcoOgpJFugyOh209ZiJcjw$OkT0RKN2U1kw6y-DGPPkmdMo9bS2c2K1D_gSGYv25IO-w7rpmz0aakH9Lw2CbEAyNgtOmdK2IE8_AqkZunAomg"
+  }
+]

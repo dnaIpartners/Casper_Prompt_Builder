@@ -1,15 +1,24 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
+import { isActiveUser, type User } from "./users";
 
-// 단일 계정(사이트 소유자) 로그인. 계정 정보는 DB 없이 환경변수로만 관리한다.
-//   AUTH_USERNAME / AUTH_PASSWORD : 로그인 계정
-//   AUTH_SECRET                   : 세션 쿠키 서명 키 (충분히 긴 임의 문자열)
-// 세션 토큰은 "<만료시각(ms)>.<HMAC-SHA256 서명>" 형태라 서버 상태 없이 검증할 수 있다.
+// 로그인은 data/users.json의 계정(src/lib/users.ts)으로 확인하고,
+// 세션은 이 사이트가 직접 서명한 쿠키로 관리한다.
+//   AUTH_SECRET : 세션 쿠키 서명 키 (32자 이상 임의 문자열, 예: openssl rand -hex 32)
+// 세션 토큰은 "<base64url(JSON 페이로드)>.<HMAC-SHA256 서명>" 형태라 서버 상태 없이 검증할 수 있다.
 
 export const SESSION_COOKIE = "session";
 // 쿠키는 만료일 없는 세션 쿠키(브라우저 종료 시 삭제)로 발급하고,
 // 토큰 자체에는 서버가 검증하는 최대 유효기간을 둔다.
 const SESSION_TOKEN_TTL_SEC = 60 * 60 * 24; // 로그인 후 24시간 (사용해도 연장하지 않음)
+
+export type Session = {
+  uid: string;
+  email: string;
+  name: string;
+  role: User["role"];
+  exp: number; // 만료 시각(ms)
+};
 
 function getSecret() {
   const secret = process.env.AUTH_SECRET;
@@ -30,32 +39,32 @@ function safeEqual(a: string, b: string) {
   return timingSafeEqual(ha, hb);
 }
 
-export function checkCredentials(username: string, password: string) {
-  const expectedUser = process.env.AUTH_USERNAME;
-  const expectedPass = process.env.AUTH_PASSWORD;
-  if (!expectedUser || !expectedPass) {
-    throw new Error("서버에 AUTH_USERNAME / AUTH_PASSWORD가 설정되어 있지 않습니다.");
+// 서명·만료를 확인하고, users.json에서 비활성화·삭제된 계정의 세션은 바로 무효로 본다.
+export function verifySessionToken(token: string | undefined): Session | null {
+  if (!token) return null;
+  const dot = token.lastIndexOf(".");
+  if (dot <= 0) return null;
+  const payload = token.slice(0, dot);
+  if (!safeEqual(token.slice(dot + 1), sign(payload))) return null;
+  try {
+    const session = JSON.parse(Buffer.from(payload, "base64url").toString("utf8")) as Session;
+    if (typeof session.exp !== "number" || session.exp <= Date.now()) return null;
+    return isActiveUser(session.uid) ? session : null;
+  } catch {
+    return null;
   }
-  // 둘 다 항상 비교해 어느 쪽이 틀렸는지 응답 시간으로 드러나지 않게 한다.
-  const userOk = safeEqual(username, expectedUser);
-  const passOk = safeEqual(password, expectedPass);
-  return userOk && passOk;
 }
 
-export function verifySessionToken(token: string | undefined) {
-  if (!token) return false;
-  const dot = token.indexOf(".");
-  if (dot <= 0) return false;
-  const expires = token.slice(0, dot);
-  const signature = token.slice(dot + 1);
-  if (!safeEqual(signature, sign(expires))) return false;
-  return Number(expires) > Date.now();
-}
-
-export async function createSession() {
-  const expires = Date.now() + SESSION_TOKEN_TTL_SEC * 1000;
-  const token = `${expires}.${sign(String(expires))}`;
-  (await cookies()).set(SESSION_COOKIE, token, {
+export async function createSession(user: User) {
+  const session: Session = {
+    uid: user.id,
+    email: user.email,
+    name: user.name,
+    role: user.role,
+    exp: Date.now() + SESSION_TOKEN_TTL_SEC * 1000,
+  };
+  const payload = Buffer.from(JSON.stringify(session), "utf8").toString("base64url");
+  (await cookies()).set(SESSION_COOKIE, `${payload}.${sign(payload)}`, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -68,11 +77,10 @@ export async function deleteSession() {
   (await cookies()).delete(SESSION_COOKIE);
 }
 
-export async function isAuthenticated() {
+export async function getSession() {
   return verifySessionToken((await cookies()).get(SESSION_COOKIE)?.value);
 }
 
-// 로그인 후 인사 문구에 쓰는 이름. 별도 지정이 없으면 로그인 아이디를 쓴다.
-export function getDisplayName() {
-  return process.env.AUTH_DISPLAY_NAME || process.env.AUTH_USERNAME || "";
+export async function isAuthenticated() {
+  return !!(await getSession());
 }

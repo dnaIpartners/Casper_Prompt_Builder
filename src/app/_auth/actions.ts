@@ -1,7 +1,8 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { checkCredentials, createSession, deleteSession } from "@/lib/auth";
+import { createSession, deleteSession } from "@/lib/auth";
+import { authenticate } from "@/lib/users";
 
 export type LoginState = { error?: string } | undefined;
 
@@ -12,20 +13,21 @@ function safeNext(value: FormDataEntryValue | null) {
 }
 
 export async function login(_prev: LoginState, formData: FormData): Promise<LoginState> {
-  const username = String(formData.get("username") ?? "").trim();
+  const loginId = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
 
-  if (!username || !password) {
-    return { error: "아이디와 비밀번호를 입력해주세요." };
+  if (!loginId || !password) {
+    return { error: "이메일과 비밀번호를 입력해 주세요." };
   }
 
-  if (!checkCredentials(username, password)) {
+  const user = authenticate(loginId, password);
+  if (!user) {
     // 무차별 대입 속도를 늦추기 위한 지연
     await new Promise((r) => setTimeout(r, 800));
-    return { error: "아이디 또는 비밀번호가 올바르지 않습니다." };
+    return { error: "이메일 또는 비밀번호가 올바르지 않습니다." };
   }
 
-  await createSession();
+  await createSession(user);
   redirect(safeNext(formData.get("next")));
 }
 

@@ -1,6 +1,6 @@
 import { DM_Sans } from "next/font/google";
 import Image from "next/image";
-import { getDisplayName, isAuthenticated } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 import { logout } from "./_auth/actions";
 import { LoginForm } from "./_auth/login-form";
 import { ToolHub } from "./_auth/tool-hub";
@@ -11,8 +11,10 @@ const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"
 // 사이트 진입점이자 유일한 허브.
 // 로그인 전에는 로그인 폼을, 로그인 후에는 같은 카드 안에서 도구 선택 목록을 보여준다.
 export default async function RootPage({ searchParams }: PageProps<"/">) {
-  const authed = await isAuthenticated();
-  const { next } = await searchParams;
+  const session = await getSession();
+  const authed = !!session;
+  const { next: nextParam } = await searchParams;
+  const next = typeof nextParam === "string" ? nextParam : "/";
 
   return (
     <div
@@ -60,7 +62,7 @@ export default async function RootPage({ searchParams }: PageProps<"/">) {
           <div key="hub" className="animate-card-in px-7 pt-11 pb-12 sm:px-12">
             <h1 className="mb-2 flex items-center gap-2.5 text-[1.9rem] leading-[1.15] font-bold tracking-[-0.03em] text-[#2a2e3a]">
               <Image src={appIcon} alt="" width={36} height={36} className="h-9 w-9 flex-shrink-0 -translate-y-0.5" priority />
-              <span>{getDisplayName()}님, 안녕하세요</span>
+              <span>{session?.name}님, 안녕하세요</span>
             </h1>
             <p className="mb-9 text-[14px] text-[#7a8090]">사용할 도구를 선택하세요.</p>
             <ToolHub />
@@ -81,8 +83,8 @@ export default async function RootPage({ searchParams }: PageProps<"/">) {
               <br />
               콘텐츠 제작 도구
             </h1>
-            <p className="mb-9 text-[14px] text-[#7a8090]">계정 소유자만 접속할 수 있습니다.</p>
-            <LoginForm next={typeof next === "string" ? next : "/"} />
+            <p className="mb-9 text-[14px] text-[#7a8090]">등록된 사용자만 접속할 수 있습니다.</p>
+            <LoginForm next={next} />
           </div>
         )}
       </div>
